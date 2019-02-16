@@ -115,7 +115,12 @@ extension ViewController: WKNavigationDelegate, UITextFieldDelegate, WKUIDelegat
             }
         }
         var script = WKUserScript(source: javascript, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
-      
+    }
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        print("Loading content")
+    }
+    func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
+        print("Redirect")
     }
     //Disables opening of websites in their native apps.
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
