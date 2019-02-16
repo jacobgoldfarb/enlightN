@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		21B628B80F8EB873F56EC2AC /* Pods_FakeNewsWebBrowser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9938DC3648FE2C4CB32F8DF /* Pods_FakeNewsWebBrowser.framework */; };
 		FA3B668722189C1500AABE8F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3B668622189C1500AABE8F /* Extensions.swift */; };
+		FA64B86D2218C659004DA834 /* script.js in Resources */ = {isa = PBXBuildFile; fileRef = FA64B86C2218C659004DA834 /* script.js */; };
 		FACE4D5522188F6B00DC7CB9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACE4D5422188F6B00DC7CB9 /* AppDelegate.swift */; };
 		FACE4D5722188F6B00DC7CB9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACE4D5622188F6B00DC7CB9 /* ViewController.swift */; };
 		FACE4D5A22188F6B00DC7CB9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FACE4D5822188F6B00DC7CB9 /* Main.storyboard */; };
@@ -16,7 +18,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		57600181B5BC3056E3C4E71F /* Pods-FakeNewsWebBrowser.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FakeNewsWebBrowser.release.xcconfig"; path = "Pods/Target Support Files/Pods-FakeNewsWebBrowser/Pods-FakeNewsWebBrowser.release.xcconfig"; sourceTree = "<group>"; };
+		73916EBE6D59EA71A7DC1EFF /* Pods-FakeNewsWebBrowser.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FakeNewsWebBrowser.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FakeNewsWebBrowser/Pods-FakeNewsWebBrowser.debug.xcconfig"; sourceTree = "<group>"; };
+		F9938DC3648FE2C4CB32F8DF /* Pods_FakeNewsWebBrowser.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FakeNewsWebBrowser.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA3B668622189C1500AABE8F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		FA64B86C2218C659004DA834 /* script.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = script.js; sourceTree = "<group>"; };
 		FACE4D5122188F6B00DC7CB9 /* FakeNewsWebBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FakeNewsWebBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FACE4D5422188F6B00DC7CB9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FACE4D5622188F6B00DC7CB9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -31,17 +37,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21B628B80F8EB873F56EC2AC /* Pods_FakeNewsWebBrowser.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		24227496872DC2EA41BF8B98 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				73916EBE6D59EA71A7DC1EFF /* Pods-FakeNewsWebBrowser.debug.xcconfig */,
+				57600181B5BC3056E3C4E71F /* Pods-FakeNewsWebBrowser.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		EA5AF5AFC445B28378C71CFB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F9938DC3648FE2C4CB32F8DF /* Pods_FakeNewsWebBrowser.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		FACE4D4822188F6B00DC7CB9 = {
 			isa = PBXGroup;
 			children = (
 				FACE4D5322188F6B00DC7CB9 /* FakeNewsWebBrowser */,
 				FACE4D5222188F6B00DC7CB9 /* Products */,
+				24227496872DC2EA41BF8B98 /* Pods */,
+				EA5AF5AFC445B28378C71CFB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -60,6 +86,7 @@
 				FACE4D5622188F6B00DC7CB9 /* ViewController.swift */,
 				FA3B668622189C1500AABE8F /* Extensions.swift */,
 				FACE4D5822188F6B00DC7CB9 /* Main.storyboard */,
+				FA64B86C2218C659004DA834 /* script.js */,
 				FACE4D5B22188F6D00DC7CB9 /* Assets.xcassets */,
 				FACE4D5D22188F6D00DC7CB9 /* LaunchScreen.storyboard */,
 				FACE4D6022188F6D00DC7CB9 /* Info.plist */,
@@ -74,9 +101,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = FACE4D6322188F6D00DC7CB9 /* Build configuration list for PBXNativeTarget "FakeNewsWebBrowser" */;
 			buildPhases = (
+				8427218A96CBD5FD1A73A575 /* [CP] Check Pods Manifest.lock */,
 				FACE4D4D22188F6B00DC7CB9 /* Sources */,
 				FACE4D4E22188F6B00DC7CB9 /* Frameworks */,
 				FACE4D4F22188F6B00DC7CB9 /* Resources */,
+				9EF10B793205A50D2A7ECCF7 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -126,12 +155,54 @@
 			buildActionMask = 2147483647;
 			files = (
 				FACE4D5F22188F6D00DC7CB9 /* LaunchScreen.storyboard in Resources */,
+				FA64B86D2218C659004DA834 /* script.js in Resources */,
 				FACE4D5C22188F6D00DC7CB9 /* Assets.xcassets in Resources */,
 				FACE4D5A22188F6B00DC7CB9 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		8427218A96CBD5FD1A73A575 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FakeNewsWebBrowser-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9EF10B793205A50D2A7ECCF7 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-FakeNewsWebBrowser/Pods-FakeNewsWebBrowser-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/Kanna/Kanna.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kanna.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FakeNewsWebBrowser/Pods-FakeNewsWebBrowser-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		FACE4D4D22188F6B00DC7CB9 /* Sources */ = {
@@ -284,6 +355,7 @@
 		};
 		FACE4D6422188F6D00DC7CB9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 73916EBE6D59EA71A7DC1EFF /* Pods-FakeNewsWebBrowser.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -302,6 +374,7 @@
 		};
 		FACE4D6522188F6D00DC7CB9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 57600181B5BC3056E3C4E71F /* Pods-FakeNewsWebBrowser.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

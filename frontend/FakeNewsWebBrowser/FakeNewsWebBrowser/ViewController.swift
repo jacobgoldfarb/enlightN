@@ -8,19 +8,56 @@
 
 import UIKit
 import WebKit
+import Kanna
+import Alamofire
 
 class ViewController: UIViewController {
     
-    @IBOutlet var webview: WKWebView!
+//    @IBOutlet var webview: WKWebView!
+    var webview: WKWebView!
     @IBOutlet var urlBar: UITextField!
+    let javascript: String = {
+        guard let scriptPath = Bundle.main.path(forResource: "script", ofType: "js"),
+            let scriptSource = try? String(contentsOfFile: scriptPath) else { return "" }
+        return scriptSource
+        
+        //        """
+//    var array = [];
+//    var elements = document.body.getElementsByTagName('*');
+//    for(var i = 0; i < elements.length; i++) {
+//        var current = elements[i];
+//        if(current.children.length === 0 && current.textContent.replace(/ |\n/g,'') !== '') {
+//            array.push(current.textContent);
+//        }
+//    }
+//    for(var i = 0; i < array.length; i++) {
+//        alert(array[i]);
+//    }
+//    """
+    }()
+    var contentController = WKUserContentController();
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         styleUI()
         
-        webview.navigationDelegate = self
         urlBar.delegate = self
+        print("JS: \(javascript)")
+        var script = WKUserScript(source: javascript, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
+        let contentController = WKUserContentController();
+        contentController.addUserScript(script)
+        let config = WKWebViewConfiguration()
+        config.userContentController = contentController
+        
+        webview = WKWebView(frame: CGRect(x: 0, y: 100, width: view.frame.width, height: view.frame.height - 100), configuration: config)
+        view.addSubview(webview)
+        
+        webview.navigationDelegate = self
+
+
+        
     }
     func styleUI(){
         urlBar.backgroundColor = UIColor(named: "urlBarColour")
@@ -41,8 +78,13 @@ class ViewController: UIViewController {
             return
         }
         print("URL Bar text: \(urlBar.text ?? "")")
-        let url = URL(string: "https://www.\(urlBar.text ?? "")")
-        webview.load(URLRequest(url: url!))
+        if !urlText.contains("https://www."){
+            let url = URL(string: "https://www.\(urlBar.text ?? "")")
+            webview.load(URLRequest(url: url!))
+        }
+        else{
+            webview.load(URLRequest(url: URL(string: urlText)!))
+        }
         
     }
     @IBAction func goBack(_ sender: Any) {
@@ -54,19 +96,30 @@ class ViewController: UIViewController {
     
     
 }
-extension ViewController: WKNavigationDelegate, UITextFieldDelegate{
+extension ViewController: WKNavigationDelegate, UITextFieldDelegate, WKUIDelegate{
     
     //MARK: WKNavigationDelegate
     func webView(_ webView: WKWebView,
                  didCommit navigation: WKNavigation!){
-        print("Here")
+
         urlBar.text = webView.url?.absoluteString
         webView.evaluateJavaScript("document.documentElement.outerHTML.toString()",
                                    completionHandler: { (html: Any?, error: Error?) in
                                     print(html ?? "")
         })
+        guard let url = webview.url else { return }
+        Alamofire.request(url).responseString { response in
+            print("\(response.result.isSuccess)")
+            if let html = response.result.value {
+                print("HTML: \(html)")
+            }
+        }
+        var script = WKUserScript(source: javascript, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
+      
     }
+    //Disables opening of websites in their native apps.
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        
         decisionHandler(WKNavigationActionPolicy(rawValue: WKNavigationActionPolicy.allow.rawValue + 2)!)
     }
     
@@ -76,6 +129,21 @@ extension ViewController: WKNavigationDelegate, UITextFieldDelegate{
         goToURL(webview)
         return true
     }
-
+  
+    func webView(_ webView: WKWebView,
+                 runJavaScriptAlertPanelWithMessage message: String,
+                 initiatedByFrame frame: WKFrameInfo,
+                 completionHandler: @escaping () -> Void) {
+        print("Received alert");
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let title = NSLocalizedString("OK", comment: "OK Button")
+        let ok = UIAlertAction(title: title, style: .default) { (action: UIAlertAction) -> Void in
+            alert.dismiss(animated: true, completion: nil)
+        }
+        alert.addAction(ok)
+        present(alert, animated: true)
+        
+        completionHandler()
+    }
 }
 
