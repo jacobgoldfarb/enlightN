@@ -6,7 +6,7 @@ automatic_scaling:
   min_idle_instances: 0
   max_idle_instances: 1
 
-default_expiration: "0d"
+default_expiration: "1d"
 
 handlers:
 - url: /source_info/.*|^/source_info$
