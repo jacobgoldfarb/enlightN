@@ -13,9 +13,13 @@ class VerificationHandler(webapp2.RequestHandler):
         self.response.headers['Access-Control-Allow-Origin'] = '*'
 
         try:
-            html = self.request.get('html', '')
-            url = self.request.get('url', '')
-
+            try:
+                body = json.loads(self.request.body)
+                html = body['html']
+                url = body['url']
+            except:
+                html = self.request.get('html', '')
+                url = self.request.get('url', '')
             response = Verification().check(
                 html=html,
                 url=url
