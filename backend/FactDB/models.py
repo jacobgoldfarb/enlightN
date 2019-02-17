@@ -27,7 +27,6 @@ class Snopes(object):
         body['requests'][0]['params'] = fullQueryString
         response = requests.post(url=URL, params=PARAMS, json=body)
         res_json = json.loads(response.text)
-        print(res_json['results'])
         i = 0
         while i < len(res_json['results'][0]['hits']):
             if 'fact-check' in res_json['results'][0]['hits'][i]['permalink']:
