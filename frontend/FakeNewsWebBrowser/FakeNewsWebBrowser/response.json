@@ -1,0 +1,31 @@
+{
+    "response": {
+        "domain" : "facebook.com",
+        "url": "https://www.facebook.com/sub-domain/whatever",
+        "results": [
+            {
+            "text": "See how 3 dev teams added AI to their apps. This free guide includes code samples, user flows, and tech specs.",
+            "desc":"This source..."
+            "tags": [
+                "fake",
+                "bias"
+                ]
+            },
+            {
+                "text": "Hi, if I switched out of the Air Force with a Tofes 55 to a combat position and got מצטיין in my course in the Air Force (it was in the טכני), who do I call to make sure both the course and the מצטיין will be on my תעודת שחרור? Does anyone in the Air Force know how I can get the physical binder they keep on every soldier?",
+                "desc":"This source..."
+                "tags": [
+                    "fake",
+                    "bias"
+                ]            },
+            {
+                "text": "CHEESE LOVERS! These are for you 👌🧀",
+                "desc":"This source..."
+                "tags": [
+                    "fake",
+                    "bias"
+                ]
+            }
+        ]
+    }
+}

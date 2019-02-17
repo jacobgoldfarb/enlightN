@@ -10,6 +10,11 @@
 		21B628B80F8EB873F56EC2AC /* Pods_FakeNewsWebBrowser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9938DC3648FE2C4CB32F8DF /* Pods_FakeNewsWebBrowser.framework */; };
 		FA3B668722189C1500AABE8F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3B668622189C1500AABE8F /* Extensions.swift */; };
 		FA64B86D2218C659004DA834 /* script.js in Resources */ = {isa = PBXBuildFile; fileRef = FA64B86C2218C659004DA834 /* script.js */; };
+		FA83D8F72218E793009BD141 /* NewsVerifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA83D8F62218E793009BD141 /* NewsVerifier.swift */; };
+		FA83D8F92218F81C009BD141 /* VerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA83D8F82218F81C009BD141 /* VerificationViewController.swift */; };
+		FA83D8FB2218F909009BD141 /* response.json in Resources */ = {isa = PBXBuildFile; fileRef = FA83D8FA2218F909009BD141 /* response.json */; };
+		FA83D8FD22190029009BD141 /* ReportCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA83D8FC22190029009BD141 /* ReportCollectionViewCell.swift */; };
+		FA83D8FF22190595009BD141 /* Report.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA83D8FE22190595009BD141 /* Report.swift */; };
 		FACE4D5522188F6B00DC7CB9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACE4D5422188F6B00DC7CB9 /* AppDelegate.swift */; };
 		FACE4D5722188F6B00DC7CB9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACE4D5622188F6B00DC7CB9 /* ViewController.swift */; };
 		FACE4D5A22188F6B00DC7CB9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FACE4D5822188F6B00DC7CB9 /* Main.storyboard */; };
@@ -23,6 +28,11 @@
 		F9938DC3648FE2C4CB32F8DF /* Pods_FakeNewsWebBrowser.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FakeNewsWebBrowser.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA3B668622189C1500AABE8F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		FA64B86C2218C659004DA834 /* script.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = script.js; sourceTree = "<group>"; };
+		FA83D8F62218E793009BD141 /* NewsVerifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsVerifier.swift; sourceTree = "<group>"; };
+		FA83D8F82218F81C009BD141 /* VerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationViewController.swift; sourceTree = "<group>"; };
+		FA83D8FA2218F909009BD141 /* response.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = response.json; sourceTree = "<group>"; };
+		FA83D8FC22190029009BD141 /* ReportCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportCollectionViewCell.swift; sourceTree = "<group>"; };
+		FA83D8FE22190595009BD141 /* Report.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Report.swift; sourceTree = "<group>"; };
 		FACE4D5122188F6B00DC7CB9 /* FakeNewsWebBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FakeNewsWebBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FACE4D5422188F6B00DC7CB9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FACE4D5622188F6B00DC7CB9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -84,8 +94,13 @@
 			children = (
 				FACE4D5422188F6B00DC7CB9 /* AppDelegate.swift */,
 				FACE4D5622188F6B00DC7CB9 /* ViewController.swift */,
+				FA83D8F82218F81C009BD141 /* VerificationViewController.swift */,
+				FA83D8FE22190595009BD141 /* Report.swift */,
+				FA83D8FC22190029009BD141 /* ReportCollectionViewCell.swift */,
+				FA83D8F62218E793009BD141 /* NewsVerifier.swift */,
 				FA3B668622189C1500AABE8F /* Extensions.swift */,
 				FACE4D5822188F6B00DC7CB9 /* Main.storyboard */,
+				FA83D8FA2218F909009BD141 /* response.json */,
 				FA64B86C2218C659004DA834 /* script.js */,
 				FACE4D5B22188F6D00DC7CB9 /* Assets.xcassets */,
 				FACE4D5D22188F6D00DC7CB9 /* LaunchScreen.storyboard */,
@@ -157,6 +172,7 @@
 				FACE4D5F22188F6D00DC7CB9 /* LaunchScreen.storyboard in Resources */,
 				FA64B86D2218C659004DA834 /* script.js in Resources */,
 				FACE4D5C22188F6D00DC7CB9 /* Assets.xcassets in Resources */,
+				FA83D8FB2218F909009BD141 /* response.json in Resources */,
 				FACE4D5A22188F6B00DC7CB9 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -190,12 +206,10 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-FakeNewsWebBrowser/Pods-FakeNewsWebBrowser-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/Kanna/Kanna.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kanna.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -209,8 +223,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA83D8FD22190029009BD141 /* ReportCollectionViewCell.swift in Sources */,
 				FA3B668722189C1500AABE8F /* Extensions.swift in Sources */,
+				FA83D8FF22190595009BD141 /* Report.swift in Sources */,
 				FACE4D5722188F6B00DC7CB9 /* ViewController.swift in Sources */,
+				FA83D8F92218F81C009BD141 /* VerificationViewController.swift in Sources */,
+				FA83D8F72218E793009BD141 /* NewsVerifier.swift in Sources */,
 				FACE4D5522188F6B00DC7CB9 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
