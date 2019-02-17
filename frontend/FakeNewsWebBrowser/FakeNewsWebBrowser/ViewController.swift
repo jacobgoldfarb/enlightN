@@ -17,8 +17,14 @@ class ViewController: UIViewController {
     @IBOutlet var backButton: UIButton!
     @IBOutlet var forwardButton: UIButton!
     @IBOutlet var verificationButton: UIButton!
-
+    
+    @IBOutlet var logoTitle: UILabel!
+    @IBOutlet var tagline: UILabel!
+    @IBOutlet var instructionTag: UILabel!
+    @IBOutlet var instructions: UILabel!
+    
     private var reports = [Report]()
+    var initialEdit = true
     
     let javascript: String = {
         guard let scriptPath = Bundle.main.path(forResource: "script", ofType: "js"),
@@ -33,23 +39,26 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         urlBar.delegate = self
-        var script = WKUserScript(source: javascript, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
         let contentController = WKUserContentController();
-        contentController.addUserScript(script)
         let config = WKWebViewConfiguration()
         config.userContentController = contentController
         
-        webview = WKWebView(frame: CGRect(x: 0, y: 70, width: view.frame.width, height: view.frame.height - 140), configuration: config)
+        webview = WKWebView(frame: CGRect(x: 0, y: 70, width: view.frame.width, height: view.frame.height - 130), configuration: config)
         view.addSubview(webview)
         
         styleUI()
 
         webview.navigationDelegate = self
     }
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        print("Did appear")
         resetReportButton()
     }
+
     func styleUI(){
         urlBar.backgroundColor = UIColor(named: "urlBarColour")
         backButton.backgroundColor = UIColor(named: "urlBarColour")
@@ -65,13 +74,21 @@ class ViewController: UIViewController {
         
         verificationButton.layer.cornerRadius = verificationButton.frame.height/2.5
         webview.isOpaque = false
+        
+    }
+    func route(to urlString: String){
+        print("URL string: \(urlString)")
+        urlBar.text = urlString
+        
+        goToURL(self)
     }
     @IBAction func goToURL(_ sender: Any) {
+        
         reports = []
-        fakeNewsFound = false
+        resetReportButton()
         urlBar.resignFirstResponder()
         guard let urlText = urlBar.text else { return }
-        
+        print("pressed go")
         guard urlText.contains(".") else{
             let urlArr = urlText.split(separator: " ")
             var searchURL = "https://www.google.com/search?q="
@@ -82,13 +99,25 @@ class ViewController: UIViewController {
             return
         }
         print("URL Bar text: \(urlBar.text ?? "")")
-        if !urlText.contains("https://www."){
-            let url = URL(string: "https://www.\(urlBar.text ?? "")")
+        
+        if !urlText.contains("https://"){
+            print("Doesn't contain...")
+            let urlStr = "https://www.\(urlBar.text ?? "")"
+            guard verifyUrl(urlString: urlStr) else {
+                print("Invalid URL")
+                return
+            }
+            let url = URL(string: urlStr)
             webview.load(URLRequest(url: url!))
         }
         else{
+            print("Load.....")
             webview.load(URLRequest(url: URL(string: urlText)!))
         }
+        logoTitle.isHidden = true
+        tagline.isHidden = true
+        instructionTag.isHidden = true
+        instructions.isHidden = true
     }
     func fakeNewsDetected(){
         fakeNewsFound = true
@@ -100,13 +129,14 @@ class ViewController: UIViewController {
         }, completion: nil)
     }
     func resetReportButton(){
-        fakeNewsFound = true
+        self.fakeNewsFound = false
         UIView.animate(withDuration: 1.0, delay: 0, options: .transitionCrossDissolve, animations: {
             self.verificationButton.layer.backgroundColor = UIColor(named: "okay")?.cgColor
         }, completion: nil)
-        UIView.transition(with: verificationButton, duration: 1.0, options: .transitionCrossDissolve, animations: {
+        UIView.transition(with: self.verificationButton, duration: 1.0, options: .transitionCrossDissolve, animations: {
             self.verificationButton.setTitle("", for: .normal)
         }, completion: nil)
+    
     }
     @IBAction func goBack(_ sender: Any) {
         reports = []
@@ -114,12 +144,15 @@ class ViewController: UIViewController {
         webview.goBack()
     }
     @IBAction func goForwards(_ sender: Any) {
+      
         webview.goForward()
     }
     @IBAction func showNewsAnalyzer(_ sender: Any) {
         guard fakeNewsFound else { return }
         let viewController: VerificationViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "verificationVC") as! VerificationViewController
         viewController.reports = reports
+        viewController.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+
         present(viewController, animated: true, completion: nil)
     }
     
@@ -146,13 +179,12 @@ extension ViewController: WKNavigationDelegate, UITextFieldDelegate, WKUIDelegat
                 })
             }
         }
-        var script = WKUserScript(source: javascript, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
     }
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        print("Loading content")
+        urlBar.text = webView.url?.absoluteString
     }
     func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
-        print("Redirect")
+        urlBar.text = webView.url?.absoluteString
     }
     //Disables opening of websites in their native apps.
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
@@ -165,6 +197,25 @@ extension ViewController: WKNavigationDelegate, UITextFieldDelegate, WKUIDelegat
         textField.resignFirstResponder()  //if desired
         goToURL(webview)
         return true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        guard initialEdit else {return}
+        UIView.transition(with: logoTitle, duration: 2.5, options: .transitionCrossDissolve, animations: {
+            self.logoTitle.textColor = .clear
+        }, completion: nil)
+        UIView.transition(with: tagline, duration: 2.5, options: .transitionCrossDissolve, animations: {
+            self.tagline.textColor = .clear
+        }, completion: nil)
+        UIView.transition(with: instructionTag, duration: 2.5, options: .transitionCrossDissolve, animations: {
+            self.instructionTag.textColor = .clear
+        }, completion: nil)
+        UIView.transition(with: instructions, duration: 2.5, options: .transitionCrossDissolve, animations: {
+            self.instructions.textColor = .clear
+        }, completion: nil)
+        
+        initialEdit = false
+        
     }
     
     func webView(_ webView: WKWebView,
@@ -183,4 +234,16 @@ extension ViewController: WKNavigationDelegate, UITextFieldDelegate, WKUIDelegat
         completionHandler()
     }
 }
-
+extension ViewController{
+    func verifyUrl (urlString: String?) -> Bool {
+        //Check for nil
+        if let urlString = urlString {
+            // create NSURL instance
+            if let url = NSURL(string: urlString) {
+                // check if your application can open the NSURL instance
+                return UIApplication.shared.canOpenURL(url as URL)
+            }
+        }
+        return false
+    }
+}

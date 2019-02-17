@@ -10,16 +10,17 @@ import Foundation
 
 class Report {
     
-    var description: String
-    var text: String
+    var moreInfo: String?
+    var text: String?
     var url: String
+    var badWebsite: Bool
     var tags: [String]
     
-    init(description: String?, text: String, url: String, tags: [String]?) {
+    init(badWebsite: Bool, moreInfoURL: String?, text: String?, url: String, tags: [String]?) {
+        self.badWebsite = badWebsite
         self.text = text
         self.url = url
-        
-        self.description = description != nil ? description! : ""
+        self.moreInfo = moreInfoURL
         self.tags = tags != nil ? tags! : [String]()
     }
 }
