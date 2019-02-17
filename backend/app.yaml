@@ -1,0 +1,37 @@
+runtime: python27
+api_version: 1
+threadsafe: yes
+instance_class: F1
+automatic_scaling:
+  min_idle_instances: 0
+  max_idle_instances: 1
+
+default_expiration: "0d"
+
+handlers:
+- url: /source_info/.*|^/source_info$
+  script: SourceInfo.app
+  secure: always
+
+- url: /verification/.*|^/verification$
+  script: Verification.app
+  secure: always
+
+- url: /_ah/admin/.*
+  script: google.appengine.ext.admin.application
+  login: admin
+
+- url: .*
+  script: main.app
+  secure: always
+
+builtins:
+- remote_api: on
+- appstats: on
+
+libraries:
+- name: webapp2
+  version: latest
+
+- name: ssl
+  version: latest

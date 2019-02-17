@@ -1,0 +1,4 @@
+cron:
+- description: consume spotify-stats-pull
+  url: /spring_fling/stats/consume_pull_queue/spring-fling-spotify-pull/SpringFling/ListeningData/120/1000/100
+  schedule: every 1 minutes
