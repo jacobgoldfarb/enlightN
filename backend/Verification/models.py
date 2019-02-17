@@ -3,6 +3,7 @@ import traceback
 import urlparse
 from difflib import SequenceMatcher
 
+from CognitiveService import CognitiveService
 from FactDB import Snopes
 from Hoaxy import Hoaxy
 from SourceInfo.models import SourceInfo
@@ -12,6 +13,7 @@ from SourceParser.models import SourceParser
 class Verification(object):
     def __init__(self):
         self.hoaxy_api = Hoaxy('f0bb13af68msh9e496658bcbcd5bp1714cejsn467253fb2ebe')
+        self.cognitive_api = CognitiveService('4e8fe2daa9fc425094542e4f46d25b85')
 
     def check(self, **data):
         result = []
@@ -20,23 +22,25 @@ class Verification(object):
         domain_name = urlparse.urlparse(url).hostname
         list_texts = SourceParser().parse(html, url)
         for text in list_texts:
+            key_text = self.cognitive_api.get_keywords(text)
             res = {}
             try:
                 snopes = Snopes()
-                snope_res = snopes.search(text)
+                snope_res = snopes.search(key_text)
                 if snope_res:
                     res = {
                         'tags': [snope_res['rating'].lower()],
-                        'description': "{}\n\n{}".format(snope_res['fact_check_url'], snope_res['origin'].encode('utf-8')),
+                        'description': snope_res['origin'].encode('utf-8'),
+                        'fact_check_url': snope_res['fact_check_url']
                     }
             except:
                 logging.error(traceback.format_exc())
 
-            hoaxy_articles = self.hoaxy_api.articles(query=text)
+            hoaxy_articles = self.hoaxy_api.articles(query=key_text)
             if hoaxy_articles:
                 hoaxy_url = hoaxy_articles[0]['canonical_url']
                 title = hoaxy_articles[0]['title']
-                if self.similarity(text, title) > 0.5:
+                if self.similarity(key_text, title) > 0.5:
                     source_verification = self.verify_source(hoaxy_url)
                     if source_verification:
                         if not res:
@@ -49,17 +53,20 @@ class Verification(object):
                         }
 
             if res:
-                res.update({'text': text})
+                res.update({'text': text, 'bad_website': False})
                 if 'description' not in res:
                     res.update({'description': ''})
+                if 'fact_check_url' not in res:
+                    res.update({'fact_check_url': ''})
                 result.append(res)
 
         source_verification = self.verify_source(url)
         if source_verification:
-            print source_verification
             result.append({
+                'bad_website': True,
                 'tags': source_verification['tags'],
-                'description': "The website you're visiting is known to be spreading disinformation."
+                'text': "The website you're visiting is known to be spreading disinformation.",
+                'description': ''
             })
 
         return {'domain': domain_name, 'url': url, 'results': result}
