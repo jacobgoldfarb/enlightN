@@ -8,63 +8,67 @@
 
 import UIKit
 import WebKit
-import Kanna
 import Alamofire
 
 class ViewController: UIViewController {
     
-//    @IBOutlet var webview: WKWebView!
     var webview: WKWebView!
     @IBOutlet var urlBar: UITextField!
+    @IBOutlet var backButton: UIButton!
+    @IBOutlet var forwardButton: UIButton!
+    @IBOutlet var verificationButton: UIButton!
+
+    private var reports = [Report]()
+    
     let javascript: String = {
         guard let scriptPath = Bundle.main.path(forResource: "script", ofType: "js"),
             let scriptSource = try? String(contentsOfFile: scriptPath) else { return "" }
         return scriptSource
-        
-        //        """
-//    var array = [];
-//    var elements = document.body.getElementsByTagName('*');
-//    for(var i = 0; i < elements.length; i++) {
-//        var current = elements[i];
-//        if(current.children.length === 0 && current.textContent.replace(/ |\n/g,'') !== '') {
-//            array.push(current.textContent);
-//        }
-//    }
-//    for(var i = 0; i < array.length; i++) {
-//        alert(array[i]);
-//    }
-//    """
     }()
     var contentController = WKUserContentController();
-
+    var fakeNewsFound = false
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        styleUI()
-        
         urlBar.delegate = self
-        print("JS: \(javascript)")
         var script = WKUserScript(source: javascript, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
         let contentController = WKUserContentController();
         contentController.addUserScript(script)
         let config = WKWebViewConfiguration()
         config.userContentController = contentController
         
-        webview = WKWebView(frame: CGRect(x: 0, y: 100, width: view.frame.width, height: view.frame.height - 100), configuration: config)
+        webview = WKWebView(frame: CGRect(x: 0, y: 70, width: view.frame.width, height: view.frame.height - 140), configuration: config)
         view.addSubview(webview)
         
+        styleUI()
+
         webview.navigationDelegate = self
-
-
-        
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        resetReportButton()
     }
     func styleUI(){
         urlBar.backgroundColor = UIColor(named: "urlBarColour")
+        backButton.backgroundColor = UIColor(named: "urlBarColour")
+        forwardButton.backgroundColor = UIColor(named: "urlBarColour")
+        
         urlBar.layer.cornerRadius = urlBar.frame.height / 2
+        backButton.layer.cornerRadius = backButton.frame.height / 2
+        forwardButton.layer.cornerRadius = forwardButton.frame.height / 2
+        
+        forwardButton.imageEdgeInsets = UIEdgeInsets(top: 10, left: 13, bottom: 10, right: 10)
+        backButton.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 13)
+
+        
+        verificationButton.layer.cornerRadius = verificationButton.frame.height/2.5
+        webview.isOpaque = false
     }
     @IBAction func goToURL(_ sender: Any) {
-        
+        reports = []
+        fakeNewsFound = false
         urlBar.resignFirstResponder()
         guard let urlText = urlBar.text else { return }
         
@@ -85,13 +89,38 @@ class ViewController: UIViewController {
         else{
             webview.load(URLRequest(url: URL(string: urlText)!))
         }
-        
+    }
+    func fakeNewsDetected(){
+        fakeNewsFound = true
+        UIView.animate(withDuration: 1.0, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.verificationButton.layer.backgroundColor = UIColor(named: "danger")?.cgColor
+        }, completion: nil)
+        UIView.transition(with: verificationButton, duration: 1.0, options: .transitionCrossDissolve, animations: {
+            self.verificationButton.setTitle("!", for: .normal)
+        }, completion: nil)
+    }
+    func resetReportButton(){
+        fakeNewsFound = true
+        UIView.animate(withDuration: 1.0, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.verificationButton.layer.backgroundColor = UIColor(named: "okay")?.cgColor
+        }, completion: nil)
+        UIView.transition(with: verificationButton, duration: 1.0, options: .transitionCrossDissolve, animations: {
+            self.verificationButton.setTitle("", for: .normal)
+        }, completion: nil)
     }
     @IBAction func goBack(_ sender: Any) {
+        reports = []
+        fakeNewsFound = false
         webview.goBack()
     }
     @IBAction func goForwards(_ sender: Any) {
         webview.goForward()
+    }
+    @IBAction func showNewsAnalyzer(_ sender: Any) {
+        guard fakeNewsFound else { return }
+        let viewController: VerificationViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "verificationVC") as! VerificationViewController
+        viewController.reports = reports
+        present(viewController, animated: true, completion: nil)
     }
     
     
@@ -101,17 +130,20 @@ extension ViewController: WKNavigationDelegate, UITextFieldDelegate, WKUIDelegat
     //MARK: WKNavigationDelegate
     func webView(_ webView: WKWebView,
                  didCommit navigation: WKNavigation!){
-
+        
         urlBar.text = webView.url?.absoluteString
-        webView.evaluateJavaScript("document.documentElement.outerHTML.toString()",
-                                   completionHandler: { (html: Any?, error: Error?) in
-                                    print(html ?? "")
-        })
+    
         guard let url = webview.url else { return }
         Alamofire.request(url).responseString { response in
             print("\(response.result.isSuccess)")
             if let html = response.result.value {
-                print("HTML: \(html)")
+                NewsVerifier.post(html, webURL: url.absoluteString, completion: { (reports, error) in
+                    guard let reports = reports, !reports.isEmpty else {
+                        return
+                    }
+                    self.reports = reports
+                    self.fakeNewsDetected()
+                })
             }
         }
         var script = WKUserScript(source: javascript, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
@@ -134,7 +166,7 @@ extension ViewController: WKNavigationDelegate, UITextFieldDelegate, WKUIDelegat
         goToURL(webview)
         return true
     }
-  
+    
     func webView(_ webView: WKWebView,
                  runJavaScriptAlertPanelWithMessage message: String,
                  initiatedByFrame frame: WKFrameInfo,
