@@ -6,7 +6,6 @@ target 'FakeNewsWebBrowser' do
   use_frameworks!
 
   # Pods for FakeNewsWebBrowser
-	pod 'Kanna', '~> 4.0.0'
 	pod 'Alamofire'
 
 
