@@ -33,5 +33,30 @@ libraries:
 - name: webapp2
   version: latest
 
+- name: MySQLdb
+  version: latest
+
+- name: django
+  version: latest
+
+- name: pycrypto
+  version: latest
+
+- name: lxml
+  version: latest
+
+- name: endpoints
+  version: 1.0
+
+- name: jinja2
+  version: latest
+
 - name: ssl
   version: latest
+
+- name: numpy
+  version: latest
+
+
+env_variables:
+  GAE_USE_SOCKETS_HTTPLIB : ''

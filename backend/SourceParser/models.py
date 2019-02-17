@@ -11,7 +11,7 @@ class SourceParser(object):
         elif 'facebook.com' in url:
             return self.parse_fb(html)
         else:
-            return [html]
+            return []
 
     @staticmethod
     def parse_twitter(html):
