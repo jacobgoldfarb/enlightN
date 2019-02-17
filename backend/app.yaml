@@ -11,19 +11,24 @@ default_expiration: "0d"
 handlers:
 - url: /source_info/.*|^/source_info$
   script: SourceInfo.app
-  secure: always
 
 - url: /verification/.*|^/verification$
   script: Verification.app
-  secure: always
 
 - url: /_ah/admin/.*
   script: google.appengine.ext.admin.application
   login: admin
 
+- url: /
+  static_files: www/index.html
+  upload: www/index.html
+
+- url: /(.*)
+  static_files: www/\1
+  upload: www/(.*)
+
 - url: .*
   script: main.app
-  secure: always
 
 builtins:
 - remote_api: on
